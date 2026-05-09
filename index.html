@@ -32,13 +32,12 @@ textarea { width: 100%; padding: 8px 10px; border: 0.5px solid #ddd; border-radi
 .notice { background: #fff8e1; border: 0.5px solid #ffe082; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #f57f17; margin-top: 10px; display: none; }
 .btn-save { width: 100%; padding: 14px; background: #cc0000; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-save:active { opacity: 0.85; }
-.record { background: white; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 10px; }
-.record-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.record { background: white; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 10px; cursor: pointer; transition: all 0.15s; }
+.record:active { opacity: 0.8; }
+.record-header { display: flex; justify-content: space-between; align-items: center; }
 .record-date { font-size: 14px; font-weight: 500; color: #222; }
 .record-total { font-size: 15px; font-weight: 700; color: #cc0000; }
-.record-detail { font-size: 12px; color: #666; }
-.record-actions { display: flex; gap: 6px; margin-top: 10px; }
-.btn-delete { padding: 6px 12px; border: 0.5px solid #ffcdd2; border-radius: 8px; background: transparent; color: #c62828; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+.record-arrow { color: #ccc; font-size: 16px; }
 .empty-state { text-align: center; padding: 2rem 1rem; color: #999; font-size: 14px; }
 .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
 .summary-card { background: #f8f8f8; border-radius: 8px; padding: 0.75rem 1rem; }
@@ -47,17 +46,39 @@ textarea { width: 100%; padding: 8px 10px; border: 0.5px solid #ddd; border-radi
 .summary-value.red { color: #cc0000; }
 .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; }
 .toast.show { opacity: 1; }
+/* Detail page */
+.detail-page { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #f4f4f4; z-index: 100; overflow-y: auto; }
+.detail-page.active { display: block; }
+.detail-header { background: #cc0000; color: white; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 12px; }
+.btn-back { background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0; display: flex; align-items: center; }
+.detail-header-title { font-size: 16px; font-weight: 700; color: white; }
+.detail-content { padding: 1rem; max-width: 420px; margin: 0 auto; }
+.detail-ot-banner { background: #cc0000; border-radius: 12px; padding: 1.5rem; text-align: center; margin-bottom: 1rem; }
+.detail-ot-label { font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
+.detail-ot-value { font-size: 36px; font-weight: 700; color: white; }
+.detail-card { background: white; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.detail-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid #eee; }
+.detail-row:last-child { border-bottom: none; }
+.detail-row-label { font-size: 13px; color: #666; }
+.detail-row-value { font-size: 14px; font-weight: 500; color: #222; }
+.detail-row-value.red { color: #cc0000; font-weight: 700; }
+.detail-notice { background: #fff8e1; border: 0.5px solid #ffe082; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #f57f17; margin-bottom: 1rem; }
+.detail-notes { background: white; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; font-size: 14px; color: #444; font-style: italic; line-height: 1.5; }
+.btn-delete-full { width: 100%; padding: 14px; background: white; color: #c62828; border: 0.5px solid #ffcdd2; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 @media (prefers-color-scheme: dark) {
   body { background: #1a1a1a; }
-  .card, .record { background: #2a2a2a; border-color: #444; }
+  .card, .record, .detail-card, .detail-notes { background: #2a2a2a; border-color: #444; }
   .tab { background: #2a2a2a; border-color: #444; color: #aaa; }
   input[type="date"], input[type="time"], input[type="text"], textarea { background: #2a2a2a; border-color: #444; color: #eee; }
-  .result-label, .record-date { color: #eee; }
-  .result-value { color: #eee; }
-  .result-row { border-color: #444; }
+  .result-label, .record-date, .detail-header-title { color: #eee; }
+  .result-value, .detail-row-value { color: #eee; }
+  .result-row, .detail-row { border-color: #444; }
   .summary-card { background: #333; }
   .summary-value { color: #eee; }
-  .field-label, .record-detail, .summary-label { color: #aaa; }
+  .field-label, .detail-row-label, .summary-label { color: #aaa; }
+  .detail-page { background: #1a1a1a; }
+  .btn-delete-full { background: #2a2a2a; border-color: #5a2a2a; }
+  .record-arrow { color: #555; }
 }
 </style>
 </head>
@@ -111,7 +132,7 @@ textarea { width: 100%; padding: 8px 10px; border: 0.5px solid #ddd; border-radi
       </div>
       <div class="field-group">
         <label class="field-label">Notes</label>
-        <textarea id="notes" placeholder="Optional notes...ex) Duty135, XV432-5208. Heavy Traffics due to incident....."></textarea>
+        <textarea id="notes" placeholder="Optional notes...."></textarea>
       </div>
     </div>
 
@@ -160,6 +181,51 @@ textarea { width: 100%; padding: 8px 10px; border: 0.5px solid #ddd; border-radi
       </div>
     </div>
     <div id="summary-entries"></div>
+  </div>
+</div>
+
+<!-- Detail Page -->
+<div class="detail-page" id="detailPage">
+  <div class="detail-header">
+    <button class="btn-back" onclick="closeDetail()"><i class="ti ti-arrow-left"></i></button>
+    <span class="detail-header-title" id="detailDate"></span>
+  </div>
+  <div class="detail-content">
+    <div class="detail-ot-banner">
+      <div class="detail-ot-label">Total OT</div>
+      <div class="detail-ot-value" id="detailTotalOT">0:00</div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-row">
+        <span class="detail-row-label">Rostered OT</span>
+        <span class="detail-row-value" id="detailRosteredOT">--</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-row-label">Additional OT</span>
+        <span class="detail-row-value" id="detailAdditionalOT">--</span>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-row">
+        <span class="detail-row-label">Duty Start</span>
+        <span class="detail-row-value" id="detailDutyStart">--</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-row-label">Duty Finish</span>
+        <span class="detail-row-value" id="detailDutyFinish">--</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-row-label">Actual Start</span>
+        <span class="detail-row-value" id="detailActualStart">--</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-row-label">Actual Finish</span>
+        <span class="detail-row-value" id="detailActualFinish">--</span>
+      </div>
+    </div>
+    <div class="detail-notice" id="detailNotice" style="display:none">⚠️ Second meal break has been applied.</div>
+    <div class="detail-notes" id="detailNotes" style="display:none"></div>
+    <button class="btn-delete-full" id="detailDeleteBtn"><i class="ti ti-trash"></i> Delete this entry</button>
   </div>
 </div>
 
@@ -251,11 +317,38 @@ function saveEntry() {
   document.getElementById('notice').style.display = 'none';
   showToast('✅ Entry saved!');
 }
+function openDetail(id) {
+  const entry = getEntries().find(e => e.id === id);
+  if (!entry) return;
+  document.getElementById('detailDate').textContent = entry.date;
+  document.getElementById('detailTotalOT').textContent = minsToHHMM(entry.totalOT);
+  document.getElementById('detailRosteredOT').textContent = minsToHHMM(entry.rosteredOT);
+  document.getElementById('detailAdditionalOT').textContent = minsToHHMM(entry.additionalOT);
+  document.getElementById('detailDutyStart').textContent = entry.dutyStart;
+  document.getElementById('detailDutyFinish').textContent = entry.dutyFinish;
+  document.getElementById('detailActualStart').textContent = entry.actualStart;
+  document.getElementById('detailActualFinish').textContent = entry.actualFinish;
+  document.getElementById('detailNotice').style.display = entry.mealDeduction ? 'block' : 'none';
+  const notesEl = document.getElementById('detailNotes');
+  if (entry.notes) {
+    notesEl.textContent = entry.notes;
+    notesEl.style.display = 'block';
+  } else {
+    notesEl.style.display = 'none';
+  }
+  document.getElementById('detailDeleteBtn').onclick = () => deleteEntry(id);
+  document.getElementById('detailPage').classList.add('active');
+}
+function closeDetail() {
+  document.getElementById('detailPage').classList.remove('active');
+}
 function deleteEntry(id) {
   if (!confirm('Delete this entry?')) return;
   saveEntries(getEntries().filter(e => e.id !== id));
+  closeDetail();
   renderHistory();
   renderSummary();
+  showToast('🗑️ Entry deleted.');
 }
 function renderHistory() {
   const entries = getEntries();
@@ -265,16 +358,13 @@ function renderHistory() {
     return;
   }
   el.innerHTML = entries.map(e => `
-    <div class="record">
+    <div class="record" onclick="openDetail(${e.id})">
       <div class="record-header">
         <span class="record-date">${e.date}</span>
-        <span class="record-total">${minsToHHMM(e.totalOT)} OT</span>
-      </div>
-      <div class="record-detail">Duty: ${e.dutyStart} – ${e.dutyFinish} &nbsp;|&nbsp; Actual: ${e.actualStart} – ${e.actualFinish}</div>
-      <div class="record-detail" style="margin-top:4px">Rostered: ${minsToHHMM(e.rosteredOT)} &nbsp;|&nbsp; Additional: ${minsToHHMM(e.additionalOT)}${e.mealDeduction ? ' &nbsp;⚠️ 2nd meal' : ''}</div>
-      ${e.notes ? `<div class="record-detail" style="margin-top:4px;font-style:italic">${e.notes}</div>` : ''}
-      <div class="record-actions">
-        <button class="btn-delete" onclick="deleteEntry(${e.id})"><i class="ti ti-trash"></i> Delete</button>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="record-total">${minsToHHMM(e.totalOT)} OT</span>
+          <i class="ti ti-chevron-right record-arrow"></i>
+        </div>
       </div>
     </div>
   `).join('');
