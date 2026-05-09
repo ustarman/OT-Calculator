@@ -20,10 +20,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .section.active { display: block; }
 .card { background: white; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
 .field-group { margin-bottom: 1rem; }
-.field-label { font-size: 12px; color: #666; margin-bottom: 4px; display: block; }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-input[type="date"], input[type="time"], input[type="text"] { width: 100%; padding: 8px 10px; border: 0.5px solid #ddd; border-radius: 8px; font-size: 14px; background: white; color: #222; }
-textarea { width: 100%; padding: 8px 10px; border: 0.5px solid #ddd; border-radius: 8px; font-size: 14px; background: white; color: #222; resize: none; height: 70px; font-family: inherit; }
+.field-group:last-child { margin-bottom: 0; }
+.field-label { font-size: 12px; color: #666; margin-bottom: 8px; display: block; font-weight: 500; }
+.time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.time-box { border: 1.5px solid #ddd; border-radius: 10px; padding: 8px 10px; background: #fafafa; }
+.time-box-label { font-size: 11px; color: #999; margin-bottom: 4px; font-weight: 500; }
+.time-box input[type="time"] { width: 100%; border: none; background: transparent; font-size: 16px; font-weight: 500; color: #222; padding: 0; outline: none; }
+input[type="date"] { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 15px; background: #fafafa; color: #222; }
+textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; background: #fafafa; color: #222; resize: none; height: 70px; font-family: inherit; }
 .result-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid #eee; }
 .result-row:last-child { border-bottom: none; }
 .result-label { font-size: 14px; font-weight: 500; color: #222; }
@@ -61,24 +65,25 @@ textarea { width: 100%; padding: 8px 10px; border: 0.5px solid #ddd; border-radi
 .detail-row:last-child { border-bottom: none; }
 .detail-row-label { font-size: 13px; color: #666; }
 .detail-row-value { font-size: 14px; font-weight: 500; color: #222; }
-.detail-row-value.red { color: #cc0000; font-weight: 700; }
 .detail-notice { background: #fff8e1; border: 0.5px solid #ffe082; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #f57f17; margin-bottom: 1rem; }
 .detail-notes { background: white; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; font-size: 14px; color: #444; font-style: italic; line-height: 1.5; }
 .btn-delete-full { width: 100%; padding: 14px; background: white; color: #c62828; border: 0.5px solid #ffcdd2; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 @media (prefers-color-scheme: dark) {
-  body { background: #1a1a1a; }
-  .card, .record, .detail-card, .detail-notes { background: #2a2a2a; border-color: #444; }
+  body, .detail-page { background: #1a1a1a; }
+  .card, .record, .detail-card, .detail-notes, .btn-delete-full { background: #2a2a2a; border-color: #444; }
   .tab { background: #2a2a2a; border-color: #444; color: #aaa; }
-  input[type="date"], input[type="time"], input[type="text"], textarea { background: #2a2a2a; border-color: #444; color: #eee; }
-  .result-label, .record-date, .detail-header-title { color: #eee; }
+  .time-box { background: #333; border-color: #555; }
+  .time-box input[type="time"] { color: #eee; }
+  .time-box-label { color: #777; }
+  input[type="date"], textarea { background: #333; border-color: #555; color: #eee; }
+  .result-label, .record-date { color: #eee; }
   .result-value, .detail-row-value { color: #eee; }
   .result-row, .detail-row { border-color: #444; }
   .summary-card { background: #333; }
   .summary-value { color: #eee; }
   .field-label, .detail-row-label, .summary-label { color: #aaa; }
-  .detail-page { background: #1a1a1a; }
-  .btn-delete-full { background: #2a2a2a; border-color: #5a2a2a; }
   .record-arrow { color: #555; }
+  .btn-delete-full { border-color: #5a2a2a; color: #ff6b6b; }
 }
 </style>
 </head>
@@ -106,33 +111,33 @@ textarea { width: 100%; padding: 8px 10px; border: 0.5px solid #ddd; border-radi
       </div>
       <div class="field-group">
         <label class="field-label">Duty time (rostered)</label>
-        <div class="field-row">
-          <div>
-            <label class="field-label">Start</label>
+        <div class="time-row">
+          <div class="time-box">
+            <div class="time-box-label">START</div>
             <input type="time" id="dutyStart" />
           </div>
-          <div>
-            <label class="field-label">Finish</label>
+          <div class="time-box">
+            <div class="time-box-label">FINISH</div>
             <input type="time" id="dutyFinish" />
           </div>
         </div>
       </div>
       <div class="field-group">
         <label class="field-label">Actual time</label>
-        <div class="field-row">
-          <div>
-            <label class="field-label">Start</label>
+        <div class="time-row">
+          <div class="time-box">
+            <div class="time-box-label">START</div>
             <input type="time" id="actualStart" />
           </div>
-          <div>
-            <label class="field-label">Finish</label>
+          <div class="time-box">
+            <div class="time-box-label">FINISH</div>
             <input type="time" id="actualFinish" />
           </div>
         </div>
       </div>
       <div class="field-group">
         <label class="field-label">Notes</label>
-        <textarea id="notes" placeholder="Optional notes...."></textarea>
+        <textarea id="notes" placeholder="Optional notes...ex) Duty135, XV432-5208. Heavy Traffics due to incident....."></textarea>
       </div>
     </div>
 
@@ -330,12 +335,8 @@ function openDetail(id) {
   document.getElementById('detailActualFinish').textContent = entry.actualFinish;
   document.getElementById('detailNotice').style.display = entry.mealDeduction ? 'block' : 'none';
   const notesEl = document.getElementById('detailNotes');
-  if (entry.notes) {
-    notesEl.textContent = entry.notes;
-    notesEl.style.display = 'block';
-  } else {
-    notesEl.style.display = 'none';
-  }
+  if (entry.notes) { notesEl.textContent = entry.notes; notesEl.style.display = 'block'; }
+  else { notesEl.style.display = 'none'; }
   document.getElementById('detailDeleteBtn').onclick = () => deleteEntry(id);
   document.getElementById('detailPage').classList.add('active');
 }
