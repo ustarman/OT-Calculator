@@ -14,7 +14,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .header h1 { font-size: 18px; font-weight: 700; color: white; }
 .header p { font-size: 12px; opacity: 0.85; color: white; }
 .tab-bar { display: flex; gap: 6px; margin-bottom: 1rem; }
-.tab { flex: 1; padding: 8px; border: 0.5px solid #ddd; border-radius: 8px; background: white; color: #666; font-size: 13px; cursor: pointer; text-align: center; transition: all 0.15s; }
+.tab { flex: 1; padding: 8px; border: 1.5px solid #ddd; border-radius: 8px; background: white; color: #666; font-size: 13px; cursor: pointer; text-align: center; transition: all 0.15s; }
 .tab.active { background: #cc0000; color: white; border-color: #cc0000; }
 .section { display: none; }
 .section.active { display: block; }
@@ -22,12 +22,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .field-group { margin-bottom: 1rem; }
 .field-group:last-child { margin-bottom: 0; }
 .field-label { font-size: 12px; color: #666; margin-bottom: 8px; display: block; font-weight: 500; }
+/* Unified input box style */
+.input-box { border: 1.5px solid #ddd; border-radius: 10px; padding: 8px 12px; background: #fafafa; }
+.input-box-label { font-size: 11px; color: #999; margin-bottom: 4px; font-weight: 600; letter-spacing: 0.5px; }
+.input-box input[type="date"],
+.input-box input[type="time"] { width: 100%; border: none; background: transparent; font-size: 16px; font-weight: 500; color: #222; padding: 0; outline: none; }
 .time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.time-box { border: 1.5px solid #ddd; border-radius: 10px; padding: 8px 10px; background: #fafafa; }
-.time-box-label { font-size: 11px; color: #999; margin-bottom: 4px; font-weight: 500; }
-.time-box input[type="time"] { width: 100%; border: none; background: transparent; font-size: 16px; font-weight: 500; color: #222; padding: 0; outline: none; }
-input[type="date"] { width: 100%; padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 15px; background: #fafafa; color: #222; height: 58px; }
-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; background: #fafafa; color: #222; resize: none; height: 70px; font-family: inherit; }
+textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; background: #fafafa; color: #222; resize: none; height: 70px; font-family: inherit; outline: none; }
 .result-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid #eee; }
 .result-row:last-child { border-bottom: none; }
 .result-label { font-size: 14px; font-weight: 500; color: #222; }
@@ -36,12 +37,11 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 .notice { background: #fff8e1; border: 0.5px solid #ffe082; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #f57f17; margin-top: 10px; display: none; }
 .btn-save { width: 100%; padding: 14px; background: #cc0000; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-save:active { opacity: 0.85; }
-.record { background: white; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 10px; cursor: pointer; transition: all 0.15s; }
+.record { background: white; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 10px; cursor: pointer; }
 .record:active { opacity: 0.8; }
 .record-header { display: flex; justify-content: space-between; align-items: center; }
 .record-date { font-size: 14px; font-weight: 500; color: #222; }
 .record-total { font-size: 15px; font-weight: 700; color: #cc0000; }
-.record-arrow { color: #ccc; font-size: 16px; }
 .empty-state { text-align: center; padding: 2rem 1rem; color: #999; font-size: 14px; }
 .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
 .summary-card { background: #f8f8f8; border-radius: 8px; padding: 0.75rem 1rem; }
@@ -72,17 +72,17 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
   body, .detail-page { background: #1a1a1a; }
   .card, .record, .detail-card, .detail-notes, .btn-delete-full { background: #2a2a2a; border-color: #444; }
   .tab { background: #2a2a2a; border-color: #444; color: #aaa; }
-  .time-box { background: #333; border-color: #555; }
-  .time-box input[type="time"] { color: #eee; }
-  .time-box-label { color: #777; }
-  input[type="date"], textarea { background: #333; border-color: #555; color: #eee; }
+  .input-box { background: #333; border-color: #555; }
+  .input-box input[type="date"],
+  .input-box input[type="time"] { color: #eee; }
+  .input-box-label { color: #777; }
+  textarea { background: #333; border-color: #555; color: #eee; }
   .result-label, .record-date { color: #eee; }
   .result-value, .detail-row-value { color: #eee; }
   .result-row, .detail-row { border-color: #444; }
   .summary-card { background: #333; }
   .summary-value { color: #eee; }
   .field-label, .detail-row-label, .summary-label { color: #aaa; }
-  .record-arrow { color: #555; }
   .btn-delete-full { border-color: #5a2a2a; color: #ff6b6b; }
 }
 </style>
@@ -107,17 +107,20 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
     <div class="card">
       <div class="field-group">
         <label class="field-label">Date</label>
-        <input type="date" id="date" />
+        <div class="input-box">
+          <div class="input-box-label">DATE</div>
+          <input type="date" id="date" />
+        </div>
       </div>
       <div class="field-group">
         <label class="field-label">Duty time (rostered)</label>
         <div class="time-row">
-          <div class="time-box">
-            <div class="time-box-label">START</div>
+          <div class="input-box">
+            <div class="input-box-label">START</div>
             <input type="time" id="dutyStart" />
           </div>
-          <div class="time-box">
-            <div class="time-box-label">FINISH</div>
+          <div class="input-box">
+            <div class="input-box-label">FINISH</div>
             <input type="time" id="dutyFinish" />
           </div>
         </div>
@@ -125,19 +128,19 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
       <div class="field-group">
         <label class="field-label">Actual time</label>
         <div class="time-row">
-          <div class="time-box">
-            <div class="time-box-label">START</div>
+          <div class="input-box">
+            <div class="input-box-label">START</div>
             <input type="time" id="actualStart" />
           </div>
-          <div class="time-box">
-            <div class="time-box-label">FINISH</div>
+          <div class="input-box">
+            <div class="input-box-label">FINISH</div>
             <input type="time" id="actualFinish" />
           </div>
         </div>
       </div>
       <div class="field-group">
         <label class="field-label">Notes</label>
-        <textarea id="notes" placeholder="Optional notes...."></textarea>
+        <textarea id="notes" placeholder="Optional notes...ex) Duty135, XV432-5208. Heavy Traffics due to incident....."></textarea>
       </div>
     </div>
 
@@ -364,7 +367,7 @@ function renderHistory() {
         <span class="record-date">${e.date}</span>
         <div style="display:flex;align-items:center;gap:8px">
           <span class="record-total">${minsToHHMM(e.totalOT)} OT</span>
-          <i class="ti ti-chevron-right record-arrow"></i>
+          <i class="ti ti-chevron-right" style="color:#ccc"></i>
         </div>
       </div>
     </div>
