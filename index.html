@@ -230,11 +230,15 @@ function saveEntry() {
     showToast('Please fill in all fields.');
     return;
   }
+  const existing = getEntries();
+  if (existing.some(e => e.date === date)) {
+    showToast('⚠️ Entry for this date already exists!');
+    return;
+  }
   const r = calcOT(ds, df, as_, af);
   const entry = { id: Date.now(), date, dutyStart: ds, dutyFinish: df, actualStart: as_, actualFinish: af, notes, rosteredOT: r.rosteredOT, additionalOT: r.additionalOT, totalOT: r.totalOT, mealDeduction: r.mealDeduction };
-  const entries = getEntries();
-  entries.unshift(entry);
-  saveEntries(entries);
+  existing.unshift(entry);
+  saveEntries(existing);
   document.getElementById('date').value = today;
   document.getElementById('dutyStart').value = '';
   document.getElementById('dutyFinish').value = '';
