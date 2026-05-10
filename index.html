@@ -140,7 +140,7 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
       </div>
       <div class="field-group">
         <label class="field-label">Notes</label>
-        <textarea id="notes" placeholder="Optional notes...."></textarea>
+        <textarea id="notes" placeholder="Optional notes....."></textarea>
       </div>
     </div>
 
@@ -163,6 +163,13 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
     <button class="btn-save" onclick="saveEntry()">
       <i class="ti ti-device-floppy"></i> Save entry
     </button>
+
+    <!-- Disclaimer - Entry tab only -->
+    <div style="margin-top:1rem;background:white;border:0.5px solid #ddd;border-radius:10px;padding:12px 14px;">
+      <p style="font-size:10px;color:#999;line-height:1.6;margin:0;">
+        <strong style="color:#888;">⚠️ Disclaimer:</strong> This app is an unofficial tool made only to help drivers with overtime calculation. It is not an official Australia Post or Redbank Transport product. All results should be checked against your official pay records. The developer and Australia Post are not responsible for any errors or issues from using this app. Users are responsible for verifying their own overtime records.
+      </p>
+    </div>
   </div>
 
   <div id="history" class="section">
@@ -238,15 +245,6 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 </div>
 
 <div class="toast" id="toast"></div>
-
-<!-- Disclaimer -->
-<div style="max-width:420px;margin:0 auto;padding:0 1rem 1.5rem;">
-  <div style="background:white;border:0.5px solid #ddd;border-radius:10px;padding:12px 14px;">
-    <p style="font-size:10px;color:#999;line-height:1.6;margin:0;">
-      <strong style="color:#888;">⚠️ Disclaimer:</strong> This app is an unofficial tool developed to assist drivers with overtime calculation only. It is not an official Australia Post / Redbank Transport product. All calculations should be verified against your official pay records. The developer and Australia Post accept no responsibility for any errors, omissions, or losses arising from the use of this app. Users are solely responsible for verifying the accuracy of their overtime records.
-    </p>
-  </div>
-</div>
 
 <script>
 const today = new Date().toISOString().split('T')[0];
