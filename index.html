@@ -370,11 +370,68 @@ function updateCalc() {
   document.getElementById(id).addEventListener('change', updateCalc);
 });
 
-// ── Storage ──
+// ── IndexedDB ──
+const IDB_NAME = 'OTCalculatorDB', IDB_STORE = 'entries';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE, { keyPath: 'id' });
+    };
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror = () => reject();
+  });
+}
+async function idbGetEntries() {
+  try {
+    const db = await openDB();
+    return new Promise(resolve => {
+      const req = db.transaction(IDB_STORE, 'readonly').objectStore(IDB_STORE).getAll();
+      req.onsuccess = () => resolve(req.result.sort((a, b) => b.date.localeCompare(a.date)));
+      req.onerror = () => resolve([]);
+    });
+  } catch(e) { return []; }
+}
+async function idbSaveEntries(entries) {
+  try {
+    const db = await openDB();
+    return new Promise(resolve => {
+      const tx = db.transaction(IDB_STORE, 'readwrite');
+      const store = tx.objectStore(IDB_STORE);
+      store.clear();
+      entries.forEach(e => store.put(e));
+      tx.oncomplete = resolve;
+      tx.onerror = resolve;
+    });
+  } catch(e) {}
+}
+
+// ── Storage (localStorage primary + IndexedDB backup) ──
 function getEntries() {
   try { return JSON.parse(localStorage.getItem('ot_entries') || '[]'); } catch(e) { return []; }
 }
-function saveEntries(e) { localStorage.setItem('ot_entries', JSON.stringify(e)); }
+function saveEntries(entries) {
+  localStorage.setItem('ot_entries', JSON.stringify(entries));
+  idbSaveEntries(entries);
+}
+
+// ── Auto-restore: runs on app start ──
+async function initStorage() {
+  const lsEntries = getEntries();
+  if (lsEntries.length === 0) {
+    const idbEntries = await idbGetEntries();
+    if (idbEntries.length > 0) {
+      localStorage.setItem('ot_entries', JSON.stringify(idbEntries));
+      showToast('✅ Data restored automatically (' + idbEntries.length + ' entries)');
+    }
+  } else {
+    idbSaveEntries(lsEntries);
+  }
+  renderHistory();
+  renderSummary();
+}
 
 // ── Reset entry form ──
 function resetEntryForm() {
@@ -632,8 +689,7 @@ function switchTab(tab, event) {
   if (tab === 'summary') renderSummary();
 }
 
-renderHistory();
-renderSummary();
+initStorage();
 </script>
 </body>
 </html>
