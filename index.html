@@ -438,8 +438,7 @@ async function exportData() {
     entries: entries
   };
   const json = JSON.stringify(backup, null, 2);
-  const dateStr = getToday();
-  const fileName = 'OT-Backup-' + dateStr + '.json';
+  const fileName = 'OT-Backup.json';
 
   // iOS: use native share sheet
   if (navigator.canShare) {
