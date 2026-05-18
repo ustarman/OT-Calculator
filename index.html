@@ -427,7 +427,7 @@ function saveEntry() {
 }
 
 // ── EXPORT (Download backup JSON) ──
-function exportData() {
+async function exportData() {
   const entries = getEntries();
   if (!entries.length) { showToast('No data to export.'); return; }
   const backup = {
@@ -437,12 +437,32 @@ function exportData() {
     totalEntries: entries.length,
     entries: entries
   };
-  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const json = JSON.stringify(backup, null, 2);
+  const dateStr = getToday();
+  const fileName = 'OT-Backup-' + dateStr + '.json';
+
+  // iOS: use native share sheet
+  if (navigator.canShare) {
+    const file = new File([json], fileName, { type: 'application/json' });
+    if (navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: 'OT Backup' });
+        localStorage.setItem('ot_last_backup_count', entries.length);
+        document.getElementById('backupReminder').style.display = 'none';
+        showToast('✅ Backup saved! (' + entries.length + ' entries)');
+      } catch(e) {
+        if (e.name !== 'AbortError') showToast('❌ Export failed.');
+      }
+      return;
+    }
+  }
+
+  // Desktop fallback
+  const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  const dateStr = new Date().toISOString().split('T')[0];
-  a.download = 'OT-Backup-' + dateStr + '.json';
+  a.download = fileName;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
