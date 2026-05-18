@@ -695,6 +695,12 @@ function switchTab(tab, event) {
 }
 
 initStorage();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/OT-Calculator/sw.js');
+  });
+}
 </script>
 </body>
 </html>
