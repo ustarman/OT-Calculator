@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover" />
 <title>OT Calculator - Redbank Transport</title>
 <link rel="manifest" href="manifest.json" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f4f4; min-height: 100vh; }
-.app { padding: 1rem; max-width: 420px; margin: 0 auto; }
+.app { padding: 1rem; max-width: 480px; margin: 0 auto; }
 .header { background: #cc0000; color: white; padding: 1rem 1.25rem; border-radius: 12px; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
 .header i { font-size: 22px; }
 .header h1 { font-size: 18px; font-weight: 700; color: white; }
@@ -32,6 +32,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .input-box input[type="date"],
 .input-box input[type="time"] { width: 100%; border: none; background: transparent; font-size: 16px; font-weight: 500; color: #222; padding: 0; outline: none; }
 .time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.time-picker { display: flex; align-items: center; gap: 2px; }
+.tp-select { flex: 1; border: none; background: transparent; font-size: 16px; font-weight: 500; color: #222; padding: 2px 0; outline: none; cursor: pointer; min-width: 0; }
+.tp-sep { font-size: 18px; font-weight: 600; color: #222; padding: 0 2px; }
 textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; background: #fafafa; color: #222; resize: none; height: 70px; font-family: inherit; outline: none; }
 .result-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid #eee; }
 .result-row:last-child { border-bottom: none; }
@@ -97,8 +100,8 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
   .card, .record, .detail-card, .detail-notes, .btn-delete-full, .backup-card { background: #2a2a2a; border-color: #444; }
   .tab { background: #2a2a2a; border-color: #444; color: #aaa; }
   .input-box { background: #333; border-color: #555; }
-  .input-box input[type="date"],
-  .input-box input[type="time"] { color: #eee; }
+  .input-box input[type="date"] { color: #eee; }
+  .tp-select, .tp-sep { color: #eee; }
   .input-box-label { color: #777; }
   textarea { background: #333; border-color: #555; color: #eee; }
   .result-label, .record-date { color: #eee; }
@@ -144,11 +147,19 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
         <div class="time-row">
           <div class="input-box">
             <div class="input-box-label">START</div>
-            <input type="time" id="dutyStart" />
+            <div class="time-picker" id="dutyStart">
+              <select class="tp-select tp-hour"></select>
+              <span class="tp-sep">:</span>
+              <select class="tp-select tp-min"></select>
+            </div>
           </div>
           <div class="input-box">
             <div class="input-box-label">FINISH</div>
-            <input type="time" id="dutyFinish" />
+            <div class="time-picker" id="dutyFinish">
+              <select class="tp-select tp-hour"></select>
+              <span class="tp-sep">:</span>
+              <select class="tp-select tp-min"></select>
+            </div>
           </div>
         </div>
       </div>
@@ -157,11 +168,19 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
         <div class="time-row">
           <div class="input-box">
             <div class="input-box-label">START</div>
-            <input type="time" id="actualStart" />
+            <div class="time-picker" id="actualStart">
+              <select class="tp-select tp-hour"></select>
+              <span class="tp-sep">:</span>
+              <select class="tp-select tp-min"></select>
+            </div>
           </div>
           <div class="input-box">
             <div class="input-box-label">FINISH</div>
-            <input type="time" id="actualFinish" />
+            <div class="time-picker" id="actualFinish">
+              <select class="tp-select tp-hour"></select>
+              <span class="tp-sep">:</span>
+              <select class="tp-select tp-min"></select>
+            </div>
           </div>
         </div>
       </div>
@@ -313,6 +332,42 @@ document.getElementById('date').value = getToday();
 
 let editingId = null;
 
+// ── Custom time picker ──
+function buildTimePickers() {
+  document.querySelectorAll('.time-picker').forEach(picker => {
+    const hourSel = picker.querySelector('.tp-hour');
+    const minSel = picker.querySelector('.tp-min');
+    hourSel.innerHTML = '<option value="">--</option>';
+    minSel.innerHTML = '<option value="">--</option>';
+    for (let h = 0; h < 24; h++) {
+      const o = document.createElement('option');
+      o.value = o.textContent = String(h).padStart(2, '0');
+      hourSel.appendChild(o);
+    }
+    for (let m = 0; m < 60; m++) {
+      const o = document.createElement('option');
+      o.value = o.textContent = String(m).padStart(2, '0');
+      minSel.appendChild(o);
+    }
+    hourSel.addEventListener('change', updateCalc);
+    minSel.addEventListener('change', updateCalc);
+  });
+}
+function getTimeVal(id) {
+  const p = document.getElementById(id);
+  const h = p.querySelector('.tp-hour').value;
+  const m = p.querySelector('.tp-min').value;
+  return (h && m) ? h + ':' + m : '';
+}
+function setTimeVal(id, val) {
+  const p = document.getElementById(id);
+  if (!val) { p.querySelector('.tp-hour').value = ''; p.querySelector('.tp-min').value = ''; return; }
+  const [h, m] = val.split(':');
+  p.querySelector('.tp-hour').value = h;
+  p.querySelector('.tp-min').value = m;
+}
+buildTimePickers();
+
 // ── Toast ──
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -360,10 +415,10 @@ function calcOT(dutyStart, dutyFinish, actualStart, actualFinish) {
   return { rosteredOT, additionalOT, totalOT, mealDeduction };
 }
 function updateCalc() {
-  const ds = document.getElementById('dutyStart').value;
-  const df = document.getElementById('dutyFinish').value;
-  const as_ = document.getElementById('actualStart').value;
-  const af = document.getElementById('actualFinish').value;
+  const ds = getTimeVal('dutyStart');
+  const df = getTimeVal('dutyFinish');
+  const as_ = getTimeVal('actualStart');
+  const af = getTimeVal('actualFinish');
   if (!ds || !df || !as_ || !af) return;
   const r = calcOT(ds, df, as_, af);
   document.getElementById('rosteredOT').textContent = minsToHHMM(r.rosteredOT);
@@ -371,9 +426,6 @@ function updateCalc() {
   document.getElementById('totalOT').textContent = minsToHHMM(r.totalOT);
   document.getElementById('notice').style.display = r.mealDeduction > 0 ? 'block' : 'none';
 }
-['dutyStart','dutyFinish','actualStart','actualFinish'].forEach(id => {
-  document.getElementById(id).addEventListener('change', updateCalc);
-});
 
 // ── IndexedDB ──
 const IDB_NAME = 'OTCalculatorDB', IDB_STORE = 'entries';
@@ -441,7 +493,7 @@ async function initStorage() {
 // ── Reset entry form ──
 function resetEntryForm() {
   document.getElementById('date').value = getToday();
-  ['dutyStart','dutyFinish','actualStart','actualFinish'].forEach(id => document.getElementById(id).value = '');
+  ['dutyStart','dutyFinish','actualStart','actualFinish'].forEach(id => setTimeVal(id, ''));
   document.getElementById('notes').value = '';
   document.getElementById('rosteredOT').textContent = '--:--';
   document.getElementById('additionalOT').textContent = '--:--';
@@ -456,10 +508,10 @@ function resetEntryForm() {
 // ── Save entry ──
 function saveEntry() {
   const date = document.getElementById('date').value;
-  const ds = document.getElementById('dutyStart').value;
-  const df = document.getElementById('dutyFinish').value;
-  const as_ = document.getElementById('actualStart').value;
-  const af = document.getElementById('actualFinish').value;
+  const ds = getTimeVal('dutyStart');
+  const df = getTimeVal('dutyFinish');
+  const as_ = getTimeVal('actualStart');
+  const af = getTimeVal('actualFinish');
   const notes = document.getElementById('notes').value;
   if (!date || !ds || !df || !as_ || !af) { showToast('Please fill in all fields.'); return; }
   const r = calcOT(ds, df, as_, af);
@@ -621,10 +673,10 @@ function startEdit(id) {
   closeDetail();
   editingId = id;
   document.getElementById('date').value = entry.date;
-  document.getElementById('dutyStart').value = entry.dutyStart;
-  document.getElementById('dutyFinish').value = entry.dutyFinish;
-  document.getElementById('actualStart').value = entry.actualStart;
-  document.getElementById('actualFinish').value = entry.actualFinish;
+  setTimeVal('dutyStart', entry.dutyStart);
+  setTimeVal('dutyFinish', entry.dutyFinish);
+  setTimeVal('actualStart', entry.actualStart);
+  setTimeVal('actualFinish', entry.actualFinish);
   document.getElementById('notes').value = entry.notes || '';
   updateCalc();
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
