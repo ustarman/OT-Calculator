@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="OT Calc" />
 <link rel="apple-touch-icon" href="icon-192.png" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/tabler-icons.min.css" />
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f4f4; min-height: 100vh; }
@@ -705,7 +705,7 @@ function renderHistory() {
     return;
   }
   el.innerHTML = entries.map(e => `
-    <div class="record" onclick="openDetail(${e.id})">
+    <div class="record" data-id="${parseInt(e.id, 10)}">
       <div class="record-header">
         <span class="record-date">${e.date}</span>
         <div style="display:flex;align-items:center;gap:8px">
@@ -715,6 +715,9 @@ function renderHistory() {
       </div>
     </div>
   `).join('');
+  el.querySelectorAll('.record').forEach(card => {
+    card.addEventListener('click', () => openDetail(parseInt(card.dataset.id, 10)));
+  });
 }
 
 // ── Render Summary ──
