@@ -73,7 +73,8 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 /* Detail page */
 .detail-page { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #f4f4f4; z-index: 100; overflow-y: auto; }
 .detail-page.active { display: block; }
-.detail-header { background: #cc0000; color: white; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 12px; }
+.detail-header { background: #cc0000; }
+.detail-header-inner { max-width: 480px; margin: 0 auto; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 12px; }
 .btn-back { background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 4px 8px 4px 0; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
 .detail-header-title { font-size: 16px; font-weight: 700; color: white; }
 .detail-content { padding: 1rem; max-width: 480px; margin: 0 auto; }
@@ -276,12 +277,14 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 <!-- ── DETAIL PAGE ── -->
 <div class="detail-page" id="detailPage">
   <div class="detail-header">
-    <button class="btn-back" onclick="closeDetail()">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M15 18l-6-6 6-6"/>
-      </svg>
-    </button>
-    <span class="detail-header-title" id="detailDate"></span>
+    <div class="detail-header-inner">
+      <button class="btn-back" onclick="closeDetail()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <span class="detail-header-title" id="detailDate"></span>
+    </div>
   </div>
   <div class="detail-content">
     <div class="detail-ot-banner">
