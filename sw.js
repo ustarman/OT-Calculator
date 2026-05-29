@@ -1,4 +1,4 @@
-const CACHE = 'ot-calculator-v7';
+const CACHE = 'ot-calculator-v8';
 const ASSETS = [
   '/OT-Calculator/',
   '/OT-Calculator/index.html',
