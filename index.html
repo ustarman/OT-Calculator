@@ -13,7 +13,8 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f4f4; min-height: 100vh; }
-.app { padding: 1rem; max-width: 480px; margin: 0 auto; }
+.app { padding: 1rem; padding-top: calc(1rem + env(safe-area-inset-top)); max-width: 480px; margin: 0 auto; }
+.detail-header { background: #cc0000; color: white; padding: 1rem 1.25rem; padding-top: calc(1rem + env(safe-area-inset-top)); display: flex; align-items: center; gap: 12px; }
 .header { background: #cc0000; color: white; padding: 1rem 1.25rem; border-radius: 12px; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
 .header i { font-size: 22px; }
 .header h1 { font-size: 18px; font-weight: 700; color: white; }
@@ -73,7 +74,6 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 /* Detail page */
 .detail-page { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #f4f4f4; z-index: 100; overflow-y: auto; }
 .detail-page.active { display: block; }
-.detail-header { background: #cc0000; color: white; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 12px; }
 .btn-back { background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 0; display: flex; align-items: center; }
 .detail-header-title { font-size: 16px; font-weight: 700; color: white; }
 .detail-content { padding: 1rem; max-width: 420px; margin: 0 auto; }
