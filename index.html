@@ -115,6 +115,11 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
   .detail-notes { color: #fff; }
   .backup-title { color: #eee; }
   .btn-import { background: #2a2a2a; }
+  .backup-reminder { background: #2a1a00; border-color: #664400; }
+  .backup-reminder-text { color: #ffb74d; }
+  .notice, .detail-notice, .backup-tip { background: #2a2000; border-color: #554400; color: #ffcc80; }
+  #summary-entries span[style*="color:#666"] { color: #aaa !important; }
+  #summary-entries div[style*="border-bottom"] { border-color: #444 !important; }
 }
 </style>
 </head>
@@ -533,10 +538,10 @@ function saveEntry() {
       entries[idx] = { ...entries[idx], date, dutyStart: ds, dutyFinish: df, actualStart: as_, actualFinish: af, notes, rosteredOT: r.rosteredOT, additionalOT: r.additionalOT, totalOT: r.totalOT, mealDeduction: r.mealDeduction };
       entries.sort((a, b) => b.date.localeCompare(a.date));
       saveEntries(entries);
+      resetEntryForm();
+      flashSaveButton('Updated!');
+      showToast('✅ Entry updated!');
     }
-    resetEntryForm();
-    flashSaveButton('Updated!');
-    showToast('✅ Entry updated!');
   } else {
     if (entries.some(e => e.date === date)) { showToast('⚠️ Entry for this date already exists!'); return; }
     const entry = { id: Date.now(), date, dutyStart: ds, dutyFinish: df, actualStart: as_, actualFinish: af, notes, rosteredOT: r.rosteredOT, additionalOT: r.additionalOT, totalOT: r.totalOT, mealDeduction: r.mealDeduction };
@@ -638,6 +643,7 @@ function importData() {
           const merged = [...existing, ...newEntries]
             .sort((a, b) => b.date.localeCompare(a.date));
           saveEntries(merged);
+          localStorage.setItem('ot_last_backup_count', merged.length);
           renderHistory();
           renderSummary();
           showToast('✅ ' + newEntries.length + ' entries restored!');
