@@ -276,7 +276,11 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 <!-- ── DETAIL PAGE ── -->
 <div class="detail-page" id="detailPage">
   <div class="detail-header">
-    <button class="btn-back" onclick="closeDetail()"><i class="ti ti-arrow-left"></i></button>
+    <button class="btn-back" onclick="closeDetail()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
     <span class="detail-header-title" id="detailDate"></span>
   </div>
   <div class="detail-content">
