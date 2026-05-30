@@ -381,6 +381,15 @@ function setTimeVal(id, val) {
 }
 buildTimePickers();
 
+// ── Auto-sync duty → actual (only when actual is empty) ──
+[['dutyStart','actualStart'],['dutyFinish','actualFinish']].forEach(([dutyId, actualId]) => {
+  document.getElementById(dutyId).querySelectorAll('.tp-hour,.tp-min').forEach(sel => {
+    sel.addEventListener('change', () => {
+      if (!getTimeVal(actualId)) setTimeVal(actualId, getTimeVal(dutyId));
+    });
+  });
+});
+
 // ── Toast ──
 function showToast(msg) {
   const t = document.getElementById('toast');
