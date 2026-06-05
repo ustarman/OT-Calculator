@@ -95,6 +95,7 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 .backup-reminder-text { font-size: 13px; color: #e65100; flex: 1; line-height: 1.5; }
 .btn-reminder-backup { padding: 8px 14px; background: #e65100; color: white; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 .btn-save.edit-mode { background: #1976d2; }
+.result-row-extra { background: #fff9c4; border-radius: 6px; padding: 10px 8px; margin: 0 -8px; }
 
 @media (prefers-color-scheme: dark) {
   body, .detail-page { background: #1a1a1a; }
@@ -115,6 +116,7 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
   .detail-notes { color: #fff; }
   .backup-title { color: #eee; }
   .btn-import { background: #2a2a2a; }
+  .result-row-extra { background: #332200; }
   .backup-reminder { background: #2a1a00; border-color: #664400; }
   .backup-reminder-text { color: #ffb74d; }
   .notice, .detail-notice, .backup-tip { background: #2a2000; border-color: #554400; color: #ffcc80; }
@@ -202,7 +204,7 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
         <span class="result-label">Rostered OT</span>
         <span class="result-value" id="rosteredOT">--:--</span>
       </div>
-      <div class="result-row">
+      <div class="result-row result-row-extra">
         <span class="result-label">Extra OT</span>
         <span class="result-value" id="additionalOT">--:--</span>
       </div>
