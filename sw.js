@@ -1,4 +1,4 @@
-const CACHE = 'ot-calculator-v14';
+const CACHE = 'ot-calculator-v15';
 const ASSETS = [
   '/OT-Calculator/',
   '/OT-Calculator/index.html',
@@ -22,7 +22,30 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+
+  // Network-first for page navigations (HTML) so updates appear automatically.
+  // Falls back to cache when offline.
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      fetch(req)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copy));
+          return res;
+        })
+        .catch(() => caches.match(req).then(cached => cached || caches.match('/OT-Calculator/index.html')))
+    );
+    return;
+  }
+
+  // Cache-first for other assets (icons, fonts, CSS) for fast loading + offline.
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    caches.match(req).then(cached => cached || fetch(req).then(res => {
+      const copy = res.clone();
+      caches.open(CACHE).then(c => c.put(req, copy));
+      return res;
+    }))
   );
 });
