@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>OT Calculator - Redbank Transport</title>
 <link rel="manifest" href="manifest.json" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -35,7 +35,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .time-picker { display: flex; align-items: center; gap: 2px; }
 .tp-select { flex: 1; border: none; background: transparent; font-size: 16px; font-weight: 500; color: #222; padding: 2px 0; outline: none; cursor: pointer; min-width: 0; }
 .tp-sep { font-size: 18px; font-weight: 600; color: #222; padding: 0 2px; }
-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; background: #fafafa; color: #222; resize: none; height: 70px; font-family: inherit; outline: none; }
+textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 16px; background: #fafafa; color: #222; resize: none; height: 70px; font-family: inherit; outline: none; }
 .result-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid #eee; }
 .result-row:last-child { border-bottom: none; }
 .result-label { font-size: 14px; font-weight: 500; color: #222; }
@@ -97,6 +97,48 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 .btn-save.edit-mode { background: #1976d2; }
 .result-row-extra { background: #fff9c4; border-radius: 6px; padding: 10px 8px; margin: 0 -8px; }
 
+/* ── Calendar ── */
+.cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal-nav-btn { width: 40px; height: 40px; border: 0.5px solid #ddd; border-radius: 8px; background: white; color: #222; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.cal-nav-btn:active { opacity: 0.6; }
+.cal-month-label { font-size: 16px; font-weight: 600; color: #222; }
+.cal-total-bar { display: flex; align-items: center; justify-content: center; gap: 8px; background: #fff5f5; border: 0.5px solid #ffd0d0; border-radius: 8px; padding: 8px; margin-bottom: 12px; font-size: 13px; }
+.cal-total-bar .lbl { color: #993333; }
+.cal-total-bar .val { color: #cc0000; font-weight: 600; }
+.cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-bottom: 4px; }
+.cal-weekdays span { text-align: center; font-size: 11px; color: #999; padding: 2px 0; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-empty { height: 52px; }
+.cal-cell { height: 52px; border: 0.5px solid #eee; border-radius: 8px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.cal-cell .cal-num { font-size: 13px; color: #888; }
+.cal-hl { background: #fff0c2; border-color: #ffd54f; }
+.cal-cell.cal-ot { background: #fff5f5; border-color: #ffd0d0; }
+.cal-cell.cal-ot .cal-num { color: #cc0000; font-weight: 500; }
+.cal-ot-val { font-size: 9px; color: #cc0000; font-weight: 600; }
+.cal-cell.cal-today { border: 1.5px solid #cc0000; }
+.cal-cell[data-id] { cursor: pointer; }
+.cal-cell[data-id]:active { opacity: 0.7; }
+.cal-legend { display: flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 11px; color: #999; }
+.cal-legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #cc0000; }
+
+/* ── Pay periods ── */
+.pp-section-label { font-size: 12px; color: #999; margin-bottom: 7px; padding-left: 2px; }
+.pp-current { border: 1.5px solid #cc0000; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; background: #fff5f5; }
+.pp-current-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.pp-range { font-size: 14px; font-weight: 500; color: #7a2020; }
+.pp-badge { font-size: 10px; font-weight: 600; color: #cc0000; border: 0.5px solid #cc0000; border-radius: 20px; padding: 2px 8px; white-space: nowrap; }
+.pp-current-body { display: flex; align-items: baseline; gap: 10px; }
+.pp-ot { font-size: 30px; font-weight: 500; color: #cc0000; line-height: 1; }
+.pp-days { font-size: 13px; color: #666; }
+.pp-list { border: 0.5px solid #ddd; border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+.pp-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 14px; border-bottom: 0.5px solid #eee; cursor: pointer; }
+.pp-row:last-child { border-bottom: none; }
+.pp-row:active { opacity: 0.7; }
+.pp-row-range { font-size: 14px; color: #222; }
+.pp-row-days { font-size: 11px; color: #999; margin-top: 2px; }
+.pp-row-ot { font-size: 15px; font-weight: 500; color: #cc0000; }
+.pp-empty { padding: 20px; text-align: center; color: #999; font-size: 13px; }
+
 @media (prefers-color-scheme: dark) {
   body, .detail-page { background: #1a1a1a; }
   .card, .record, .detail-card, .detail-notes, .btn-delete-full, .backup-card { background: #2a2a2a; border-color: #444; }
@@ -120,8 +162,23 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
   .backup-reminder { background: #2a1a00; border-color: #664400; }
   .backup-reminder-text { color: #ffb74d; }
   .notice, .detail-notice, .backup-tip { background: #2a2000; border-color: #554400; color: #ffcc80; }
-  #summary-entries span[style*="color:#666"] { color: #aaa !important; }
-  #summary-entries div[style*="border-bottom"] { border-color: #444 !important; }
+  .cal-nav-btn { background: #2a2a2a; border-color: #444; color: #eee; }
+  .cal-month-label { color: #eee; }
+  .cal-total-bar { background: #2a1414; border-color: #5a2a2a; }
+  .cal-total-bar .lbl { color: #ffb0b0; }
+  .cal-total-bar .val { color: #ff8a8a; }
+  .cal-cell { background: #2a2a2a; border-color: #444; }
+  .cal-cell .cal-num { color: #aaa; }
+  .cal-cell.cal-ot { background: #3a1818; border-color: #6a2a2a; }
+  .cal-cell.cal-ot .cal-num, .cal-ot-val { color: #ff8a8a; }
+  .cal-hl { background: #3a3000; border-color: #6a5500; }
+  .pp-current { background: #2a1414; border-color: #cc0000; }
+  .pp-range { color: #ff9b9b; }
+  .pp-days { color: #aaa; }
+  .pp-ot, .pp-row-ot { color: #ff8a8a; }
+  .pp-list { border-color: #444; }
+  .pp-row { border-color: #444; }
+  .pp-row-range { color: #eee; }
 }
 </style>
 </head>
@@ -227,9 +284,24 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
     </div>
   </div>
 
-  <!-- ── HISTORY TAB ── -->
+  <!-- ── HISTORY TAB (Calendar) ── -->
   <div id="history" class="section">
-    <div id="history-list"></div>
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="shiftMonth(-1)" aria-label="Previous month">‹</button>
+      <div class="cal-month-label" id="calMonthLabel">--</div>
+      <button class="cal-nav-btn" onclick="shiftMonth(1)" aria-label="Next month">›</button>
+    </div>
+    <div class="cal-total-bar">
+      <span class="lbl">This month</span>
+      <span class="val" id="calMonthTotal">0 days · 0:00 OT</span>
+    </div>
+    <div class="cal-weekdays">
+      <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-legend">
+      <span class="dot"></span> Days with overtime · tap to view details
+    </div>
   </div>
 
   <!-- ── SUMMARY TAB ── -->
@@ -238,24 +310,19 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
       <span class="backup-reminder-text">💾 <strong>Backup reminder:</strong> You have unsaved changes since your last backup.</span>
       <button class="btn-reminder-backup" onclick="exportData()">Back up now</button>
     </div>
-    <div class="summary-grid">
-      <div class="summary-card">
-        <div class="summary-label">Total entries</div>
-        <div class="summary-value" id="totalEntries">0</div>
+    <div class="pp-section-label">Current pay period</div>
+    <div class="pp-current" id="curPeriod">
+      <div class="pp-current-head">
+        <span class="pp-range">--</span>
       </div>
-      <div class="summary-card">
-        <div class="summary-label">Total OT</div>
-        <div class="summary-value red" id="totalOTHours">0:00</div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-label">Rostered OT</div>
-        <div class="summary-value" id="totalRostered">0:00</div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-label">Extra OT</div>
-        <div class="summary-value" id="totalAdditional">0:00</div>
+      <div class="pp-current-body">
+        <span class="pp-ot">0:00</span>
+        <span class="pp-days">OT · 0 days worked</span>
       </div>
     </div>
+
+    <div class="pp-section-label">Past pay periods</div>
+    <div class="pp-list" id="pastPeriods"></div>
 
     <!-- ── BACKUP & RESTORE CARD ── -->
     <div class="backup-card">
@@ -278,7 +345,6 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
       </div>
     </div>
 
-    <div id="summary-entries"></div>
   </div>
 </div>
 
@@ -721,47 +787,128 @@ function deleteEntry(id) {
   showToast('🗑️ Entry deleted.');
 }
 
-// ── Render History ──
+// ── Date helpers (UTC-based, timezone-safe) ──
+const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function isoToNum(iso) { const [y,m,d] = iso.split('-').map(Number); return Math.floor(Date.UTC(y, m-1, d) / 86400000); }
+function numToISO(n) { const dt = new Date(n * 86400000); return dt.getUTCFullYear() + '-' + String(dt.getUTCMonth()+1).padStart(2,'0') + '-' + String(dt.getUTCDate()).padStart(2,'0'); }
+function addDaysISO(iso, n) { return numToISO(isoToNum(iso) + n); }
+function fmtDay(iso) { const [, m, d] = iso.split('-').map(Number); return d + ' ' + MONTHS_SHORT[m-1]; }
+function fmtRange(start, end) { return fmtDay(start) + ' – ' + fmtDay(end) + ' ' + end.split('-')[0]; }
+
+// ── Pay period (fortnight): anchored Sun 14 Jun 2026, 14-day cycles ──
+const PAY_ANCHOR = '2026-06-14';
+function periodStartFor(iso) {
+  const diff = isoToNum(iso) - isoToNum(PAY_ANCHOR);
+  const idx = Math.floor(diff / 14);
+  return numToISO(isoToNum(PAY_ANCHOR) + idx * 14);
+}
+
+// ── Calendar state ──
+let calYear, calMonth, periodHighlight = null;
+(function initCalDate() { const [y, m] = getToday().split('-').map(Number); calYear = y; calMonth = m - 1; })();
+
+function shiftMonth(dir) {
+  periodHighlight = null;
+  calMonth += dir;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderHistory();
+}
+
+// ── Render History (Calendar) ──
 function renderHistory() {
   const entries = getEntries();
-  const el = document.getElementById('history-list');
-  if (!entries.length) {
-    el.innerHTML = '<div class="empty-state"><i class="ti ti-inbox" style="font-size:32px;display:block;margin-bottom:8px"></i>No entries yet</div>';
-    return;
+  const byDate = {};
+  entries.forEach(e => { byDate[e.date] = e; });
+
+  document.getElementById('calMonthLabel').textContent = MONTHS_FULL[calMonth] + ' ' + calYear;
+
+  let monthMins = 0, monthDays = 0;
+  entries.forEach(e => {
+    const [y, m] = e.date.split('-').map(Number);
+    if (y === calYear && m === calMonth + 1) { monthMins += e.totalOT; monthDays++; }
+  });
+  document.getElementById('calMonthTotal').textContent = monthDays + ' days · ' + minsToHHMM(monthMins) + ' OT';
+
+  const firstDow = new Date(Date.UTC(calYear, calMonth, 1)).getUTCDay();
+  const daysInMonth = new Date(Date.UTC(calYear, calMonth + 1, 0)).getUTCDate();
+  const todayISO = getToday();
+  let html = '';
+  for (let i = 0; i < firstDow; i++) html += '<div class="cal-empty"></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const iso = calYear + '-' + String(calMonth + 1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const e = byDate[iso];
+    let cls = 'cal-cell';
+    if (periodHighlight && iso >= periodHighlight.start && iso <= periodHighlight.end) cls += ' cal-hl';
+    if (e) cls += ' cal-ot';
+    if (iso === todayISO) cls += ' cal-today';
+    const attr = e ? ` data-id="${parseInt(e.id, 10)}"` : '';
+    html += '<div class="' + cls + '"' + attr + '>'
+      + '<span class="cal-num">' + d + '</span>'
+      + (e ? '<span class="cal-ot-val">' + minsToHHMM(e.totalOT) + '</span>' : '')
+      + '</div>';
   }
-  el.innerHTML = entries.map(e => `
-    <div class="record" data-id="${parseInt(e.id, 10)}">
-      <div class="record-header">
-        <span class="record-date">${e.date}</span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="record-total">${minsToHHMM(e.totalOT)} OT</span>
-          <i class="ti ti-chevron-right" style="color:#ccc"></i>
-        </div>
-      </div>
-    </div>
-  `).join('');
-  el.querySelectorAll('.record').forEach(card => {
-    card.addEventListener('click', () => openDetail(parseInt(card.dataset.id, 10)));
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = html;
+  grid.querySelectorAll('.cal-cell[data-id]').forEach(cell => {
+    cell.addEventListener('click', () => openDetail(parseInt(cell.dataset.id, 10)));
   });
 }
 
-// ── Render Summary ──
+// ── Jump calendar to a pay period (from Summary) ──
+function jumpToPeriod(startISO) {
+  const [y, m] = addDaysISO(startISO, 7).split('-').map(Number);
+  calYear = y; calMonth = m - 1;
+  periodHighlight = { start: startISO, end: addDaysISO(startISO, 13) };
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab')[1].classList.add('active');
+  document.getElementById('history').classList.add('active');
+  renderHistory();
+  window.scrollTo(0, 0);
+}
+
+// ── Render Summary (pay periods) ──
 function renderSummary() {
   const entries = getEntries();
   const lastBackupCount = parseInt(localStorage.getItem('ot_last_backup_count') || '0');
   document.getElementById('backupReminder').style.display = entries.length > lastBackupCount ? 'flex' : 'none';
-  document.getElementById('totalEntries').textContent = entries.length;
-  document.getElementById('totalOTHours').textContent = minsToHHMM(entries.reduce((s, e) => s + e.totalOT, 0));
-  document.getElementById('totalRostered').textContent = minsToHHMM(entries.reduce((s, e) => s + e.rosteredOT, 0));
-  document.getElementById('totalAdditional').textContent = minsToHHMM(entries.reduce((s, e) => s + e.additionalOT, 0));
-  const el = document.getElementById('summary-entries');
-  if (!entries.length) { el.innerHTML = '<div class="empty-state">No data yet</div>'; return; }
-  el.innerHTML = entries.map(e => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #eee">
-      <span style="font-size:13px;color:#666">${e.date}</span>
-      <span style="font-size:14px;font-weight:700;color:#cc0000">${minsToHHMM(e.totalOT)}</span>
+
+  const map = {};
+  entries.forEach(e => {
+    const start = periodStartFor(e.date);
+    if (!map[start]) map[start] = { start, end: addDaysISO(start, 13), mins: 0, days: 0 };
+    map[start].mins += e.totalOT;
+    map[start].days++;
+  });
+
+  const curStart = periodStartFor(getToday());
+  const cur = map[curStart];
+  const curEl = document.getElementById('curPeriod');
+  curEl.querySelector('.pp-range').textContent = fmtRange(curStart, addDaysISO(curStart, 13));
+  curEl.querySelector('.pp-ot').textContent = cur ? minsToHHMM(cur.mins) : '0:00';
+  const curDays = cur ? cur.days : 0;
+  curEl.querySelector('.pp-days').textContent = curDays + (curDays === 1 ? ' OT day' : ' OT days');
+
+  const past = Object.values(map).filter(p => p.start !== curStart).sort((a, b) => b.start.localeCompare(a.start));
+  const listEl = document.getElementById('pastPeriods');
+  if (!past.length) {
+    listEl.innerHTML = '<div class="pp-empty">No past pay periods yet</div>';
+    return;
+  }
+  listEl.innerHTML = past.map(p => `
+    <div class="pp-row" data-start="${p.start}">
+      <div>
+        <div class="pp-row-range">${fmtRange(p.start, p.end)}</div>
+        <div class="pp-row-days">${p.days}${p.days === 1 ? ' OT day' : ' OT days'}</div>
+      </div>
+      <span class="pp-row-ot">${minsToHHMM(p.mins)}</span>
     </div>
   `).join('');
+  listEl.querySelectorAll('.pp-row').forEach(row => {
+    row.addEventListener('click', () => jumpToPeriod(row.dataset.start));
+  });
 }
 
 // ── Tab switch ──
