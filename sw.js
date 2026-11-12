@@ -1,4 +1,4 @@
-const CACHE = 'ot-calculator-v15';
+const CACHE = 'ot-calculator-v16';
 const ASSETS = [
   '/OT-Calculator/',
   '/OT-Calculator/index.html',
@@ -24,6 +24,8 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
+  // Usage counts (Umami): always from the network, never cached — a cached tracker would go stale.
+  if (new URL(req.url).hostname === 'cloud.umami.is') return;
 
   // Network-first for page navigations (HTML) so updates appear automatically.
   // Falls back to cache when offline.
