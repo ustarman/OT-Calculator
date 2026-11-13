@@ -111,7 +111,7 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 .cal-weekdays span { text-align: center; font-size: 11px; color: #999; padding: 2px 0; }
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
 .cal-empty { height: 52px; }
-.cal-cell { height: 52px; border: 0.5px solid #eee; border-radius: 8px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.cal-cell { position: relative; height: 52px; border: 0.5px solid #eee; border-radius: 8px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
 .cal-cell .cal-num { font-size: 13px; color: #888; }
 .cal-hl { background: #fff0c2; border-color: #ffd54f; }
 .cal-cell.cal-ot { background: #fff5f5; border-color: #ffd0d0; }
@@ -122,6 +122,8 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
 .cal-cell[data-id]:active { opacity: 0.7; }
 .cal-legend { display: flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 11px; color: #999; }
 .cal-legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #cc0000; }
+.cal-pay-mark { position: absolute; top: 3px; right: 4px; font-size: 12px; font-weight: 800; color: #0a7d2c; line-height: 1; }
+.cal-legend .pay-key { color: #0a7d2c; font-weight: 800; }
 
 /* ── Pay periods ── */
 .pp-section-label { font-size: 12px; color: #999; margin-bottom: 7px; padding-left: 2px; }
@@ -173,6 +175,7 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
   .cal-cell .cal-num { color: #aaa; }
   .cal-cell.cal-ot { background: #3a1818; border-color: #6a2a2a; }
   .cal-cell.cal-ot .cal-num, .cal-ot-val { color: #ff8a8a; }
+  .cal-pay-mark, .cal-legend .pay-key { color: #4ade80; }
   .cal-hl { background: #3a3000; border-color: #6a5500; }
   .pp-current { background: #2a1414; border-color: #cc0000; }
   .pp-range { color: #ff9b9b; }
@@ -302,7 +305,7 @@ textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-rad
     </div>
     <div class="cal-grid" id="calGrid"></div>
     <div class="cal-legend">
-      <span class="dot"></span> Days with overtime · tap to view details
+      <span class="dot"></span> Overtime&nbsp;&nbsp;·&nbsp;&nbsp;<span class="pay-key">$</span>&nbsp;Payday&nbsp;&nbsp;·&nbsp;&nbsp;tap a day for details
     </div>
   </div>
 
@@ -806,6 +809,12 @@ function periodStartFor(iso) {
   return numToISO(isoToNum(PAY_ANCHOR) + idx * 14);
 }
 
+// ── Payday: Wednesday, fortnightly, anchored Wed 4 Nov 2026 ──
+const PAYDAY_ANCHOR = '2026-11-04';
+function isPayday(iso) {
+  return (isoToNum(iso) - isoToNum(PAYDAY_ANCHOR)) % 14 === 0;
+}
+
 // ── Calendar state ──
 let calYear, calMonth, periodHighlight = null;
 (function initCalDate() { const [y, m] = getToday().split('-').map(Number); calYear = y; calMonth = m - 1; })();
@@ -841,12 +850,14 @@ function renderHistory() {
   for (let d = 1; d <= daysInMonth; d++) {
     const iso = calYear + '-' + String(calMonth + 1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
     const e = byDate[iso];
+    const payday = isPayday(iso);
     let cls = 'cal-cell';
     if (periodHighlight && iso >= periodHighlight.start && iso <= periodHighlight.end) cls += ' cal-hl';
     if (e) cls += ' cal-ot';
     if (iso === todayISO) cls += ' cal-today';
     const attr = e ? ` data-id="${parseInt(e.id, 10)}"` : '';
     html += '<div class="' + cls + '"' + attr + '>'
+      + (payday ? '<span class="cal-pay-mark" title="Payday">$</span>' : '')
       + '<span class="cal-num">' + d + '</span>'
       + (e ? '<span class="cal-ot-val">' + minsToHHMM(e.totalOT) + '</span>' : '')
       + '</div>';
