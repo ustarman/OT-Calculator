@@ -463,6 +463,7 @@ buildTimePickers();
   document.getElementById(dutyId).querySelectorAll('.tp-hour,.tp-min').forEach(sel => {
     sel.addEventListener('change', () => {
       if (!getTimeVal(actualId)) setTimeVal(actualId, getTimeVal(dutyId));
+      updateCalc(); // recalc after the auto-fill (programmatic value set fires no change event)
     });
   });
 });
